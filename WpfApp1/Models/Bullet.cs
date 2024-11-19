@@ -1,9 +1,7 @@
-﻿using System.Windows.Controls;
-using System.Windows.Media;
+﻿using System;
 using System.Windows;
-using System;
-using System.Threading.Tasks;
-using System.Windows.Threading;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 public class Bullet
 {
@@ -43,8 +41,8 @@ public class Bullet
     {
         if (Visible)
         {
-            double movementSpeed = 10; 
-            Coords = new Point(Coords.X, Coords.Y - movementSpeed); 
+            double movementSpeed = 10;
+            Coords = new Point(Coords.X, Coords.Y - movementSpeed);
 
             if (Coords.Y < 0)
             {

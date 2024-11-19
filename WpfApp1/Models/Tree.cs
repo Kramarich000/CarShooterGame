@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Windows.Controls;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
-using System;
+using System.Windows.Controls;
 
 public class Tree
 {
@@ -10,7 +10,7 @@ public class Tree
     public double Height { get; set; }
     public double Width { get; set; }
     private readonly Random random;
-    private readonly double minDistance = 150; 
+    private readonly double minDistance = 150;
 
     public Tree(UIElement element, Random random, List<Tree> trees)
     {
@@ -80,19 +80,19 @@ public class Tree
 
         if (Coords.Y > canvas.ActualHeight)
         {
-            PositionTreeOutsideRoad(trees);  
+            PositionTreeOutsideRoad(trees);
         }
 
         List<UIElement> uiElements = trees.ConvertAll(tree => tree.Element);
 
         if (CheckCollisionWithOtherObjects(uiElements))
         {
-            PositionTreeOutsideRoad(trees);  
+            PositionTreeOutsideRoad(trees);
         }
 
         if (IsTooCloseToOtherTrees(trees))
         {
-            PositionTreeOutsideRoad(trees);  
+            PositionTreeOutsideRoad(trees);
         }
 
         MoveElement();

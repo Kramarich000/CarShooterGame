@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace GameApp.Models
 {
@@ -138,7 +137,7 @@ namespace GameApp.Models
         {
             int cellX = (int)(x / GridCellSize);
             int cellY = (int)(y / GridCellSize);
-            return cellX + cellY * 1000; 
+            return cellX + cellY * 1000;
         }
     }
 }

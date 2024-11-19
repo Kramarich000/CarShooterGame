@@ -1,25 +1,18 @@
-﻿using GameApp.Models;
-using System.Collections.ObjectModel;
+﻿using GameApp;
+using GameApp.Models;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Threading;
-using System.Windows;
-using System;
-using System.Linq;
 using System.Windows.Media;
-using System.Windows.Shapes;
-using GameApp;
 using System.Windows.Media.Imaging;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Models;
-using System.Text;
-using System.Threading;
-using System.Text.RegularExpressions;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Xml.Linq;
+using System.Windows.Shapes;
+using System.Windows.Threading;
 
 public class GameViewModel : INotifyPropertyChanged
 {
@@ -32,16 +25,12 @@ public class GameViewModel : INotifyPropertyChanged
     private int score;
     private double speed;
     private double enemySpeed;
-    private readonly DispatcherTimer gameTimer;
-    private readonly string difficulty;
     private List<Obstacle> obstacles;
     private readonly List<Bullet> bullets;
     private double turnSpeed = 4;
     private bool isPowerUpActive = false;
     private readonly List<DispatcherTimer> activeTimers = new List<DispatcherTimer>();
     public bool isGameRunning = true;
-    private bool BruteStop = false;
-
 
     public event PropertyChangedEventHandler PropertyChanged;
 
@@ -145,13 +134,12 @@ public class GameViewModel : INotifyPropertyChanged
         }
     }
 
-    public GameViewModel(string difficulty)
+    public GameViewModel()
     {
-        this.difficulty = difficulty;
         IsPause = false;
         Score = 0;
         Speed = 2;
-        EnemySpeed = GetEnemySpeed(difficulty);
+        EnemySpeed = 4;
         bullets = new List<Bullet>();
         enemies = new List<Enemy>();
         obstacles = new List<Obstacle>();
@@ -160,21 +148,6 @@ public class GameViewModel : INotifyPropertyChanged
 
         InitializeGameObjects();
 
-    }
-
-    private double GetEnemySpeed(string difficulty)
-    {
-        switch (difficulty)
-        {
-            case "easy":
-                return 3;
-            case "medium":
-                return 5;
-            case "hard":
-                return 6;
-            default:
-                throw new System.ArgumentException("Invalid difficulty");
-        }
     }
 
     private void InitializeGameObjects()
@@ -297,7 +270,7 @@ public class GameViewModel : INotifyPropertyChanged
         var canvas = mainWindow.FindName("GameCanvas") as Canvas;
         canvas.Children.Add(bullet.Element);
 
-        await Task.Delay(10); 
+        await Task.Delay(10);
 
         bulletElement.Visibility = Visibility.Visible;
     }
@@ -327,7 +300,7 @@ public class GameViewModel : INotifyPropertyChanged
         const int targetFps = 60;
         var targetFrameTime = TimeSpan.FromSeconds(1.0 / targetFps);
 
-        DateTime lastFrameTime = DateTime.Now;  
+        DateTime lastFrameTime = DateTime.Now;
 
         while (isGameRunning)
         {
@@ -390,7 +363,7 @@ public class GameViewModel : INotifyPropertyChanged
         }
 
         foreach (var tree in Trees)
-        { 
+        {
             tree.Move(Speed, Trees);
         }
 
@@ -526,7 +499,7 @@ public class GameViewModel : INotifyPropertyChanged
         if (Application.Current.MainWindow is MainWindow mainWindow)
         {
             mainWindow.ExitButton.Visibility = Visibility.Visible;
-            mainWindow.ShowPlayerNameGrid(); 
+            mainWindow.ShowPlayerNameGrid();
         }
     }
 
@@ -576,10 +549,10 @@ public class GameViewModel : INotifyPropertyChanged
 
     public void RestartGame()
     {
-        isGameRunning = false;  
+        isGameRunning = false;
         Score = 0;
         Speed = 2;
-        EnemySpeed = GetEnemySpeed(difficulty);
+        EnemySpeed = 4;
         turnSpeed = 4;
 
         enemies.Clear();

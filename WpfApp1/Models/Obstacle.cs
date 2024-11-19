@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Windows.Controls;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
-using System;
+using System.Windows.Controls;
 
 public class Obstacle
 {
@@ -10,14 +10,14 @@ public class Obstacle
     public double Width => Element.ActualWidth;
     public double Height => Element.ActualHeight;
 
-    private double speed;
+    private readonly double speed;
     private readonly double roadLeft = 560;
     private readonly double roadRight = 1340;
     private static readonly Random random = new Random();
     private readonly List<FrameworkElement> allObjects;
 
     private readonly Dictionary<int, HashSet<FrameworkElement>> spatialGrid;
-    private const int GridCellSize = 200; 
+    private const int GridCellSize = 200;
 
     public Obstacle(FrameworkElement element, double speed, List<FrameworkElement> allObjects)
     {
@@ -132,6 +132,6 @@ public class Obstacle
     {
         int cellX = (int)(x / GridCellSize);
         int cellY = (int)(y / GridCellSize);
-        return cellX + cellY * 1000; 
+        return cellX + cellY * 1000;
     }
 }

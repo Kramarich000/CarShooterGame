@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace GameApp.Models
 {
@@ -20,15 +16,15 @@ namespace GameApp.Models
 
         private static readonly Random random = new Random();
 
-        private readonly double roadLeft = 510; 
-        private readonly double roadRight = 1370; 
+        private readonly double roadLeft = 510;
+        private readonly double roadRight = 1370;
 
         public Enemy(FrameworkElement element, double speed)
         {
             Element = element;
             Coords = new Point(0, 0);
             Height = element.ActualHeight;
-            Width = element.ActualWidth; 
+            Width = element.ActualWidth;
             Speed = speed;
             Visible = true;
         }
@@ -40,12 +36,12 @@ namespace GameApp.Models
             if (newY > Application.Current.MainWindow.Height)
             {
                 Coords = new Point(Coords.X, Application.Current.MainWindow.Height);
-                Reset(enemiesList);  
+                Reset(enemiesList);
             }
             else
             {
                 Coords = new Point(Coords.X, newY);
-                MoveElement();  
+                MoveElement();
             }
         }
 
@@ -63,7 +59,7 @@ namespace GameApp.Models
             while (intersects && attempts < MaxAttempts)
             {
                 intersects = false;
-                attempts++;  
+                attempts++;
 
                 foreach (var enemy in enemies)
                 {
@@ -89,10 +85,10 @@ namespace GameApp.Models
                 randomYCoord = random.Next(-1000, -((int)Height) - 500);
             }
 
-            Coords = new Point(randomXCoord, randomYCoord); 
-            Element.Visibility = Visibility.Visible; 
+            Coords = new Point(randomXCoord, randomYCoord);
+            Element.Visibility = Visibility.Visible;
             Visible = true;
-            MoveElement(); 
+            MoveElement();
         }
 
 
@@ -105,7 +101,7 @@ namespace GameApp.Models
 
             if (!isIntersecting)
             {
-                double minDistance = 200; 
+                double minDistance = 200;
                 double centerX = x + Width / 2;
                 double centerY = y + Height / 2;
                 double otherCenterX = otherEnemy.Coords.X + otherEnemy.Width / 2;
@@ -131,7 +127,7 @@ namespace GameApp.Models
             var enemyRect = new Rect(Canvas.GetLeft(Element), Canvas.GetTop(Element), Element.Width, Element.Height);
             var obstacleRect = new Rect(Canvas.GetLeft(otherElement), Canvas.GetTop(otherElement), otherElement.Width, otherElement.Height);
 
-            return enemyRect.IntersectsWith(obstacleRect); 
+            return enemyRect.IntersectsWith(obstacleRect);
         }
 
     }

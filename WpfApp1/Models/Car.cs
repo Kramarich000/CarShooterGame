@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 public class Car
 {
@@ -14,15 +13,20 @@ public class Car
     public bool IsMovingLeft { get; set; }
     public bool IsMovingRight { get; set; }
 
-    private readonly double roadLeft = 510; 
-    private readonly double roadRight = 1430; 
-    private readonly double roadTop = 0; 
-    internal Visibility Visibility;
+    private readonly double roadLeft = 510;
+    private readonly double roadRight = 1430;
+    private readonly double roadTop = 0;
+    public readonly Visibility Visibility = Visibility.Visible;
 
     private Point initialPosition;
 
     public Car(FrameworkElement element, Canvas canvas)
     {
+        if (canvas is null)
+        {
+            throw new ArgumentNullException(nameof(canvas));
+        }
+
         Element = element;
         Coords = new Point(Canvas.GetLeft(element), Canvas.GetTop(element));
         initialPosition = Coords;
@@ -30,6 +34,11 @@ public class Car
 
     public void MoveToTop(Canvas canvas)
     {
+        if (canvas is null)
+        {
+            throw new ArgumentNullException(nameof(canvas));
+        }
+
         if (IsMovingTop)
         {
             Coords = new Point(Coords.X, Coords.Y - 5);
@@ -57,6 +66,11 @@ public class Car
 
     public void MoveToLeft(Canvas canvas, double LeftSpeed)
     {
+        if (canvas is null)
+        {
+            throw new ArgumentNullException(nameof(canvas));
+        }
+
         if (IsMovingLeft)
         {
             Coords = new Point(Coords.X - LeftSpeed, Coords.Y);
@@ -67,6 +81,11 @@ public class Car
 
     public void MoveToRight(Canvas canvas, double RightSpeed)
     {
+        if (canvas is null)
+        {
+            throw new ArgumentNullException(nameof(canvas));
+        }
+
         if (IsMovingRight)
         {
             Coords = new Point(Coords.X + RightSpeed, Coords.Y);
@@ -86,7 +105,7 @@ public class Car
         var otherCoords = new Point(Canvas.GetLeft(other), Canvas.GetTop(other));
         var otherHeight = other.ActualHeight;
         var otherWidth = other.ActualWidth;
-        
+
         Rect thisRect = new Rect(Coords.X, Coords.Y, Width, Height);
         Rect otherRect = new Rect(otherCoords.X, otherCoords.Y, otherWidth, otherHeight);
 

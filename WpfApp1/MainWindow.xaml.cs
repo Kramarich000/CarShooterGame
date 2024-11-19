@@ -1,15 +1,11 @@
-﻿using System;
-using System.Threading;
+﻿using Models;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using GameApp.Models;
-using Models;
 
 namespace GameApp
 {
@@ -27,7 +23,7 @@ namespace GameApp
         public MainWindow()
         {
             InitializeComponent();
-            viewModel = new GameViewModel("easy");
+            viewModel = new GameViewModel();
             DataContext = viewModel;
             GameGrid.Visibility = Visibility.Collapsed;
             LeaderboardGrid.Visibility = Visibility.Collapsed;
@@ -212,8 +208,8 @@ namespace GameApp
         private void TruncateTable_Click(object sender, RoutedEventArgs e)
         {
             LeaderboardManager manager = new LeaderboardManager();
-            manager.ClearLeaderboard();  
-            LeaderboardDataGrid.ItemsSource = manager.Entries;  
+            manager.ClearLeaderboard();
+            LeaderboardDataGrid.ItemsSource = manager.Entries;
         }
 
         private void RestartButton_Click(object sender, RoutedEventArgs e)

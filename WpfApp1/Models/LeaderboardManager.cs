@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 
 namespace Models
 {
@@ -37,9 +37,9 @@ namespace Models
 
         public void ClearLeaderboard()
         {
-            Entries.Clear(); 
-            SaveLeaderboard(); 
-            OnPropertyChanged(nameof(Entries)); 
+            Entries.Clear();
+            SaveLeaderboard();
+            OnPropertyChanged(nameof(Entries));
         }
 
         private void LoadLeaderboard()
