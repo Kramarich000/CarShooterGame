@@ -318,9 +318,12 @@
                 <Button Name="RestartButton" Focusable="False" Content="Рестарт" Width="150" Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Click="RestartButton_Click" Style="{StaticResource CustomExitButtonStyle}" Canvas.Left="10" Canvas.Top="104"/>
                 <Button Content="В главное меню" Focusable="False" Width="150" Height="49" Click="CancelPlayerName_Click" Style="{StaticResource MenuButtonStyle}" HorizontalAlignment="Left" Canvas.Left="10" Canvas.Top="25" VerticalAlignment="Top"/>
                 <TextBox Canvas.Left="1636" Foreground="White" FontSize="25" TextWrapping="Wrap" Text="Очки:" Canvas.Top="33" Width="78" BorderThickness="0" Background="{x:Null}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox x:Name="BulletsCountTextBlock" Canvas.Left="1642" Foreground="White" FontSize="25" TextWrapping="Wrap" Text="Пуль:" Canvas.Top="121" Width="78" BorderThickness="0" Background="{x:Null}" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
             </Canvas>
             <TextBlock Text="{Binding Score}" Focusable="False" TextAlignment="Center" Width="80" Height="35" FontSize="24" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,43,119,0" Background="black" Foreground="White"/>
+            <TextBlock Text="{Binding BulletsCount}" Focusable="False" TextAlignment="Center" Width="80" Height="35" FontSize="24" VerticalAlignment="Top" HorizontalAlignment="Right" Background="black" Foreground="White" Margin="0,130,119,0" />
+
         </Grid>
 
     </DockPanel>

@@ -18,12 +18,28 @@ namespace GameApp
         private int scoreBuffer = 0;
         private int tickCounter = 0;
         private bool isNameSaved = false;
+        public bool isCooldown = false;
 
 
         public MainWindow()
         {
             InitializeComponent();
+
             viewModel = new GameViewModel();
+            if (BulletsCountTextBlock == null)
+            {
+                throw new InvalidOperationException("BulletsCountTextBlock не был инициализирован в XAML");
+            }
+
+            if (viewModel == null)
+            {
+                throw new InvalidOperationException("viewModel не был инициализирован");
+            }
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                isCooldown = viewModel.IsReloading;
+            });
+
             DataContext = viewModel;
             GameGrid.Visibility = Visibility.Collapsed;
             LeaderboardGrid.Visibility = Visibility.Collapsed;
@@ -221,8 +237,8 @@ namespace GameApp
             viewModel.isGameRunning = true;
             GameGrid.Focus();
             Keyboard.Focus(GameGrid);
-
         }
 
+    
     }
 }

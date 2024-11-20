@@ -25,12 +25,18 @@ public class GameViewModel : INotifyPropertyChanged
     private int score;
     private double speed;
     private double enemySpeed;
+    private DispatcherTimer reloadTimer;
     private List<Obstacle> obstacles;
     private readonly List<Bullet> bullets;
     private double turnSpeed = 4;
     private bool isPowerUpActive = false;
     private readonly List<DispatcherTimer> activeTimers = new List<DispatcherTimer>();
     public bool isGameRunning = true;
+    private int bulletsCount;
+    private readonly int maxBulletsOnScreen;
+    private bool isReloading = false;
+    public event EventHandler ReloadCompleted;
+    private readonly MainWindow mainWindow = Application.Current.MainWindow as MainWindow;
 
     public event PropertyChangedEventHandler PropertyChanged;
 
@@ -104,6 +110,19 @@ public class GameViewModel : INotifyPropertyChanged
         }
     }
 
+    public bool IsReloading
+    {
+        get => isReloading;
+        set
+        {
+            if (isReloading != value)
+            {
+                isReloading = value;
+                OnPropertyChanged(nameof(IsReloading));
+            }
+        }
+    }
+
     public int Score
     {
         get => score;
@@ -111,6 +130,20 @@ public class GameViewModel : INotifyPropertyChanged
         {
             score = value;
             OnPropertyChanged();
+        }
+    }
+
+
+    public int BulletsCount
+    {
+        get => bulletsCount;
+        set
+        {
+            if (bulletsCount != value)
+            {
+                bulletsCount = value;
+                OnPropertyChanged(nameof(BulletsCount));
+            }
         }
     }
 
@@ -147,6 +180,9 @@ public class GameViewModel : INotifyPropertyChanged
         powerUps = new List<PowerUp>();
 
         InitializeGameObjects();
+        bulletsCount = InitializeBullets();
+        maxBulletsOnScreen = bulletsCount;
+        ReloadingTimer();
 
     }
 
@@ -243,11 +279,47 @@ public class GameViewModel : INotifyPropertyChanged
         RemoveOffScreenBullets();
     }
 
+    public void ReloadingTimer()
+    {
+        reloadTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(3)
+        };
+        reloadTimer.Tick += ReloadBullets;
+    }
+    private void ReloadBullets(object sender, EventArgs e)
+    {
+        BulletsCount = InitializeBullets();
+        IsReloading = false;
+        if (mainWindow != null && !IsReloading)
+        {
+            mainWindow.BulletsCountTextBlock.Text = "Пуль: ";
+            mainWindow.BulletsCountTextBlock.SetValue(Canvas.LeftProperty, 1642.0);
+        }
+        reloadTimer.Stop();
+    }
+
+    private void StartReloading()
+    {
+        IsReloading = true;
+        reloadTimer.Start();
+
+        if (mainWindow != null && IsReloading)
+        {
+            mainWindow.BulletsCountTextBlock.Text = "Перезарядка...";
+            mainWindow.BulletsCountTextBlock.Width = 200;
+            mainWindow.BulletsCountTextBlock.SetValue(Canvas.LeftProperty, 1550.0);
+        }
+    }
+    public static int InitializeBullets()
+    {
+        Random random = new Random();
+        return random.Next(5, 10);
+    }
     public async void FireBullet(double x, double y)
     {
-        int MaxBulletsOnScreen = 5;
 
-        if (bullets.Count >= MaxBulletsOnScreen)
+        if (bullets.Count >= maxBulletsOnScreen)
         {
             return;
         }
@@ -515,19 +587,33 @@ public class GameViewModel : INotifyPropertyChanged
         if (IsPause) return;
 
         var keyMapping = new Dictionary<Key, Action>
-        {
-            { Key.Up, () => Car.IsMovingTop = true },
-            { Key.Down, () => Car.IsMovingBottom = true },
-            { Key.Left, () => Car.IsMovingLeft = true },
-            { Key.Right, () => Car.IsMovingRight = true },
-            { Key.Space, () => FireBullet(Car.Coords.X + Car.Width / 2 - 5, Car.Coords.Y) }
-        };
+    {
+        { Key.Up, () => Car.IsMovingTop = true },
+        { Key.Down, () => Car.IsMovingBottom = true },
+        { Key.Left, () => Car.IsMovingLeft = true },
+        { Key.Right, () => Car.IsMovingRight = true },
+        { Key.Space, () =>
+            {
+                if (BulletsCount > 0 && !IsReloading)
+                {
+                    FireBullet(Car.Coords.X + Car.Width / 2 - 5, Car.Coords.Y);
+                    BulletsCount--;
+                    InitializeBullets();
+                    if (BulletsCount == 0)
+                    {
+                        StartReloading();
+                    }
+                }
+            }
+        }
+    };
 
         if (keyMapping.ContainsKey(e.Key))
         {
             keyMapping[e.Key].Invoke();
         }
     }
+
 
     public void HandleKeyUp(KeyEventArgs e)
     {
@@ -599,9 +685,6 @@ public class GameViewModel : INotifyPropertyChanged
         StartGame();
 
     }
-
-
-
 
     protected void OnPropertyChanged([CallerMemberName] string name = null)
     {
